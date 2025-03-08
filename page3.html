@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RB_Customer Onboarding Form - Page 3</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin-left: auto;
+            /* Pushes the form to the right */
+            margin-right: 50px;
+            /* Adds some space from the right edge */
+            padding: 20px 20px 20px 40px;
+            border-radius: 10px;
+            background-color: black;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input[type="checkbox"],
+        .form-group input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .config-heading {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .button-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <!-- Include pdf-lib Library -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <!-- Include FileSaver.js for saving files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <h1>RB_Customer Onboarding Form</h1>
+        <h2>Device Configuration</h2>
+
+        <form id="page3Form">
+            <!-- Device Type Selection -->
+            <div class="form-group">
+                <div class="config-heading">Select Device Type:</div>
+                <select id="deviceType" name="deviceType" onchange="handleDeviceTypeChange()" required>
+                    <option value="">Select your answer</option>
+                    <option value="BSF">BSF</option>
+                    <option value="BSM">BSM</option>
+                    <option value="BeeLabel">BeeLabel</option>
+                    <option value="BAG 5G">BAG 5G</option>
+                    <option value="Solar">Solar</option>
+                    <option value="Router">Router</option>
+                </select>
+            </div>
+
+            <!-- Locations -->
+            <div id="locationsSection" class="form-group hidden">
+                <div class="config-heading">Locations:</div>
+                <label><input type="checkbox" name="locations" value="GPS"> GPS</label>
+                <label><input type="checkbox" name="locations" value="WiFi"> WiFi</label>
+                <label><input type="checkbox" name="locations" value="GSM"> GSM</label>
+            </div>
+
+            <!-- Sensors -->
+            <div id="sensorsSection" class="form-group hidden">
+                <div class="config-heading">Sensors:</div>
+                <label><input type="checkbox" name="sensors" value="Temperature"> Temperature</label>
+                <label><input type="checkbox" name="sensors" value="Humidity" id="humiditySensor"> Humidity</label>
+                <label><input type="checkbox" name="sensors" value="Ambient Light"> Ambient Light</label>
+                <label><input type="checkbox" name="sensors" value="None"> None</label>
+            </div>
+
+            <!-- Interrupt -->
+            <div id="interruptSection" class="form-group hidden">
+                <div class="config-heading">Interrupt:</div>
+                <label><input type="checkbox" name="interrupt" value="Shock"> Shock</label>
+                <label><input type="checkbox" name="interrupt" value="Ambient Light"> Ambient Light</label>
+            </div>
+
+            <!-- BLE -->
+            <div id="bleSection" class="form-group hidden">
+                <div class="config-heading">BLE:</div>
+                <label><input type="radio" name="ble" value="ON"> ON</label>
+                <label><input type="radio" name="ble" value="OFF"> OFF</label>
+            </div>
+
+            <!-- Sample Mode -->
+            <div id="sampleModeSection" class="form-group hidden">
+                <div class="config-heading">Sample Mode:</div>
+                <label><input type="radio" name="sampleMode" value="ON" onclick="handleSampleModeChange()"> ON</label>
+                <label><input type="radio" name="sampleMode" value="OFF" onclick="handleSampleModeChange()"> OFF</label>
+            </div>
+
+            <!-- Report Interval and Sample Interval (Shown when Sample Mode is ON) -->
+            <div id="reportIntervalSection" class="form-group hidden">
+                <label for="reportInterval">Enter Report Interval (In seconds):</label>
+                <input type="number" id="reportInterval" name="reportInterval">
+            </div>
+            <div id="sampleIntervalSection" class="form-group hidden">
+                <label for="sampleInterval">Enter Sample Interval (In seconds):</label>
+                <input type="number" id="sampleInterval" name="sampleInterval">
+            </div>
+
+            <!-- PRF (Shown when Sample Mode is OFF) -->
+            <div id="prfSection" class="form-group hidden">
+                <label for="prf">Enter PRF (In seconds):</label>
+                <input type="number" id="prf" name="prf">
+            </div>
+
+            <!-- Digital Signoff -->
+            <!-- <div class="form-group">
+                <div class="config-heading">Digital Signoff:</div>
+                <input type="file" id="signoff" name="signoff" accept="image/*">
+            </div> -->
+
+            <!-- Navigation Buttons -->
+            <div class="button-container">
+                <button type="button" onclick="previousPage()">Back</button>
+                <button type="button" onclick="submitForm()">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Function to handle device type change
+        function handleDeviceTypeChange() {
+            const deviceType = document.getElementById("deviceType").value;
+            const locationsSection = document.getElementById("locationsSection");
+            const sensorsSection = document.getElementById("sensorsSection");
+            const interruptSection = document.getElementById("interruptSection");
+            const bleSection = document.getElementById("bleSection");
+            const sampleModeSection = document.getElementById("sampleModeSection");
+            const humiditySensor = document.getElementById("humiditySensor");
+
+            // Hide all sections initially
+            locationsSection.classList.add("hidden");
+            sensorsSection.classList.add("hidden");
+            interruptSection.classList.add("hidden");
+            bleSection.classList.add("hidden");
+            sampleModeSection.classList.add("hidden");
+
+            // Show sections based on device type
+            if (deviceType === "BSF" || deviceType === "BSM") {
+                // Show all options
+                locationsSection.classList.remove("hidden");
+                sensorsSection.classList.remove("hidden");
+                interruptSection.classList.remove("hidden");
+                bleSection.classList.remove("hidden");
+                sampleModeSection.classList.remove("hidden");
+            } else if (deviceType === "BeeLabel") {
+                // Show all options except Humidity
+                locationsSection.classList.remove("hidden");
+                sensorsSection.classList.remove("hidden");
+                interruptSection.classList.remove("hidden");
+                bleSection.classList.remove("hidden");
+                sampleModeSection.classList.remove("hidden");
+                humiditySensor.disabled = "none"; // Disable Humidity option
+            } else if (deviceType === "BAG 5G") {
+                // Show all options except Humidity and BLE
+                locationsSection.classList.remove("hidden");
+                sensorsSection.classList.remove("hidden");
+                interruptSection.classList.remove("hidden");
+                sampleModeSection.classList.remove("hidden");
+                humiditySensor.disabled = true; // Disable Humidity option
+                bleSection.classList.add("hidden"); // Hide BLE
+            } else if (deviceType === "Solar") {
+                // Show only BLE and Sample Mode
+                bleSection.classList.remove("hidden");
+                sampleModeSection.classList.remove("hidden");
+            } else if (deviceType === "Router") {
+                // Show only Sample Mode
+                sampleModeSection.classList.remove("hidden");
+            }
+        }
+
+        // Function to handle sample mode change
+        function handleSampleModeChange() {
+            const sampleMode = document.querySelector('input[name="sampleMode"]:checked').value;
+            const reportIntervalSection = document.getElementById("reportIntervalSection");
+            const sampleIntervalSection = document.getElementById("sampleIntervalSection");
+            const prfSection = document.getElementById("prfSection");
+
+            if (sampleMode === "ON") {
+                // Show Report Interval and Sample Interval
+                reportIntervalSection.classList.remove("hidden");
+                sampleIntervalSection.classList.remove("hidden");
+                // Hide PRF
+                prfSection.classList.add("hidden");
+            } else if (sampleMode === "OFF") {
+                // Show PRF
+                prfSection.classList.remove("hidden");
+                // Hide Report Interval and Sample Interval
+                reportIntervalSection.classList.add("hidden");
+                sampleIntervalSection.classList.add("hidden");
+            }
+        }
+
+        // Function to generate sensor mask
+        function generateSensorMask(tempSensor, humiditySensor, ambientSensor) {
+            const bit0 = ambientSensor ? 1 : 0;
+            const bit1 = tempSensor ? 1 : 0;
+            const bit2 = humiditySensor ? 1 : 0;
+            const bit3 = 1; // Always 1
+            const bit4 = 1; // Always 1
+
+            const binary = `${bit4}${bit3}${bit2}${bit1}${bit0}`;
+            return parseInt(binary, 2);
+        }
+
+        // Function to generate commands
+        function generatingCommands(hostingLocation, locations, sensors, interrupt, ble, sampleMode, reportInterval, sampleInterval, prf) {
+            let commands = [];
+
+            // Command based on hosting location
+            if (hostingLocation === "RB_US_Portal") {
+                commands.push("AT+IP=0,aovx-listener.roambee.com,30009");
+            } else {
+                commands.push("AT+IP=0,aovx-listener.roambee.de,30009");
+            }
+
+            // Commands based on locations (GPS and WiFi)
+            if (locations.includes("GPS")) {
+                commands.push("AT+GNSSENABLE=1");
+            } else {
+                commands.push("AT+GNSSENABLE=0");
+            }
+
+            if (locations.includes("WIFI")) {
+                commands.push("AT+WIFIENABLE=1,10");
+            } else {
+                commands.push("AT+WIFIENABLE=0,10");
+            }
+
+            // Extract sensor values from formData.page3.sensors
+            const tempSensor = sensors.includes("Temperature");
+            const humiditySensor = sensors.includes("Humidity");
+            const ambientSensor = sensors.includes("Ambient Light");
+
+            // Generate sensor mask
+            if (sensors.length === 0 || sensors.includes("None")) {
+                commands.push("AT+SENSORMASK=0");
+            } else {
+                const sensorMask = generateSensorMask(tempSensor, humiditySensor, ambientSensor);
+                commands.push(`AT+SENSORMASK=${sensorMask}`);
+            }
+
+            const gotShock = interrupt.includes("Shock");
+            const gotAmbient = interrupt.includes("Ambient Light");
+
+            if (gotShock) {
+                commands.push("AT+MOTION=2,10,1800 & AT+VIBPARAM=1,0,217");
+            } else {
+                commands.push("AT+VIBPARAM=0,0,150");
+            }
+
+            if (gotAmbient) {
+                commands.push("AT+LIGHT=1,500,900");
+            } else {
+                commands.push("AT+LIGHT=0,500,900");
+            }
+
+            if (ble === "ON") {
+                commands.push("AT+BTENABLE=1,20");
+            } else {
+                commands.push("AT+BTENABLE=0,20");
+            }
+
+            if (sampleMode === "ON") {
+                commands.push(`AT+SAMPLEMODE=1,1 & AT+TIMEGAP=0,${reportInterval},1,${sampleInterval}`);
+            } else {
+                commands.push(`AT+SAMPLEMODE=0,0 & AT+TIMEGAP=0,${prf},1,${prf}`);
+            }
+
+            return commands;
+        }
+
+        // Function to go back to Page 2
+        function previousPage() {
+            window.location.href = "page2.html";
+        }
+
+        // Function to collect form data and generate Word document
+        async function submitForm() {
+            const page1Data = JSON.parse(localStorage.getItem("page1Data"));
+            const page2Data = JSON.parse(localStorage.getItem("page2Data"));
+            const form = document.getElementById("page3Form");
+            // const signoffFile = document.getElementById("signoff").files[0];
+
+            if (form.checkValidity()) {
+                const formData = {
+                    page1: page1Data,
+                    page2: page2Data,
+                    page3: {
+                        deviceType: document.getElementById("deviceType").value,
+                        locations: Array.from(document.querySelectorAll('input[name="locations"]:checked')).map(el => el.value),
+                        sensors: Array.from(document.querySelectorAll('input[name="sensors"]:checked')).map(el => el.value),
+                        interrupt: Array.from(document.querySelectorAll('input[name="interrupt"]:checked')).map(el => el.value),
+                        ble: document.querySelector('input[name="ble"]:checked')?.value || "N/A",
+                        sampleMode: document.querySelector('input[name="sampleMode"]:checked')?.value || "N/A",
+                        reportInterval: document.getElementById("reportInterval").value || "N/A",
+                        sampleInterval: document.getElementById("sampleInterval").value || "N/A",
+                        prf: document.getElementById("prf").value || "N/A",
+                    },
+                };
+
+                const commandsList = generatingCommands(
+                    formData.page1.hostingLocation,
+                    formData.page3.locations,
+                    formData.page3.sensors,
+                    formData.page3.interrupt,
+                    formData.page3.ble,
+                    formData.page3.sampleMode,
+                    formData.page3.reportInterval,
+                    formData.page3.sampleInterval,
+                    formData.page3.prf
+                );
+
+                console.log("Form Data:", formData);
+
+                try {
+                    // Load the existing PDF (rename.pdf)
+                    const existingPdfBytes = await fetch("rename.pdf").then(res => res.arrayBuffer());
+
+                    // Load the PDF with pdf-lib
+                    const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+                    const italicFont = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaOblique);
+                    const boldFont = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                    const regularFont = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+                    // Get the first page of the PDF
+                    const pages = pdfDoc.getPages();
+                    const firstPage = pages[0];
+
+                    // Add form data to the PDF
+                    const { width, height } = firstPage.getSize();
+                    const fontSize = 11;
+                    const textColor = PDFLib.rgb(0, 0, 0); // Black color
+                    const lineHeight = 15;
+                    const headingFontSize = 16;
+                    // const lineHeight= 20; // Line height for heading
+                    const boxPadding = 5; // Padding for the light blue box
+                    const boxColor = PDFLib.rgb(1, 222 / 255, 89 / 255); // #ffde59 in RGB // Light blue color
+
+
+
+                    let yPos = height - 140; // Start from the top of the page
+                    const currentDate = new Date();
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = currentDate.toLocaleDateString('en-US', options);
+
+                    // Draw the current date on the right-hand side
+                    firstPage.drawText(formattedDate, {
+                        x: width - 200, // Adjust the x position to align to the right
+                        y: height - 80,
+                        size: fontSize,
+                        color: textColor,
+                        font: italicFont,
+                    });
+                    // User Account Information
+                    firstPage.drawText("User Account Information", {
+                        x: 50,
+                        y: yPos,
+                        size: 15,
+                        color: textColor,
+                        font: boldFont
+                    });
+                    // yPos -= lineHeight;
+                    const textWidth = boldFont.widthOfTextAtSize("User Account Information", headingFontSize);
+                    firstPage.drawLine({
+                        start: { x: 50, y: yPos - 2 }, // Adjust y position for the line
+                        end: { x: 50 + textWidth, y: yPos - 2 },
+                        thickness: 1, // Line thickness
+                        color: textColor,
+                    });
+                    yPos -= lineHeight+ 10;
+                    const hostingLocationLabel = "Hosting Location: ";
+                    const hostingLocationValue = formData.page1.hostingLocation;
+
+                    // Draw the bold label
+                    firstPage.drawText(hostingLocationLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const labelWidth = boldFont.widthOfTextAtSize(hostingLocationLabel, fontSize);
+                    const valueWidth = regularFont.widthOfTextAtSize(hostingLocationValue, fontSize);
+                    const boxX = 50 + labelWidth + 5; // Add a small gap after the label
+                    const boxY = yPos - fontSize; // Adjust y position for the box
+
+                    // Draw the light blue box
+                    firstPage.drawRectangle({
+                        x: boxX,
+                        y: boxY,
+                        width: valueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2,
+                        color: boxColor,
+                        opacity: 0.5, // Adjust opacity if needed
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(hostingLocationValue, {
+                        x: boxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10;
+
+                    const honeycombRoleLabel = "Honeycomb Role: ";
+                    const honeycombRoleValue = formData.page1.honeycombRole;
+
+                    firstPage.drawText(honeycombRoleLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    const honeycombLabelWidth = boldFont.widthOfTextAtSize(honeycombRoleLabel, fontSize);
+                    const honeycombValueWidth = regularFont.widthOfTextAtSize(honeycombRoleValue, fontSize);
+                    const honeycombBoxX = 50 + honeycombLabelWidth + 5;
+                    const honeycombBoxY = yPos - fontSize;
+
+                    firstPage.drawRectangle({
+                        x: honeycombBoxX,
+                        y: honeycombBoxY,
+                        width: honeycombValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2,
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    firstPage.drawText(honeycombRoleValue, {
+                        x: honeycombBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10;
+
+                    const userNameLabel = "User Name: ";
+                    const userNameValue = formData.page1.userName;
+
+                    // Draw the bold label
+                    firstPage.drawText(userNameLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const userNameLabelWidth = boldFont.widthOfTextAtSize(userNameLabel, fontSize);
+                    const userNameValueWidth = regularFont.widthOfTextAtSize(userNameValue, fontSize);
+                    const userNameBoxX = 50 + userNameLabelWidth + 5;
+                    const userNameBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: userNameBoxX,
+                        y: userNameBoxY,
+                        width: userNameValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(userNameValue, {
+                        x: userNameBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after User Name
+
+                    // Designation
+                    const designationLabel = "Designation: ";
+                    const designationValue = formData.page1.designation;
+
+                    // Draw the bold label
+                    firstPage.drawText(designationLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const designationLabelWidth = boldFont.widthOfTextAtSize(designationLabel, fontSize);
+                    const designationValueWidth = regularFont.widthOfTextAtSize(designationValue, fontSize);
+                    const designationBoxX = 50 + designationLabelWidth + 5;
+                    const designationBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: designationBoxX,
+                        y: designationBoxY,
+                        width: designationValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(designationValue, {
+                        x: designationBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Designation
+
+                    // Email
+                    const emailLabel = "Email: ";
+                    const emailValue = formData.page1.email;
+
+                    // Draw the bold label
+                    firstPage.drawText(emailLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const emailLabelWidth = boldFont.widthOfTextAtSize(emailLabel, fontSize);
+                    const emailValueWidth = regularFont.widthOfTextAtSize(emailValue, fontSize);
+                    const emailBoxX = 50 + emailLabelWidth + 5;
+                    const emailBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: emailBoxX,
+                        y: emailBoxY,
+                        width: emailValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(emailValue, {
+                        x: emailBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Email
+
+                    // Phone
+                    const phoneLabel = "Phone: ";
+                    const phoneValue = formData.page1.phoneNumber;
+
+                    // Draw the bold label
+                    firstPage.drawText(phoneLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const phoneLabelWidth = boldFont.widthOfTextAtSize(phoneLabel, fontSize);
+                    const phoneValueWidth = regularFont.widthOfTextAtSize(phoneValue, fontSize);
+                    const phoneBoxX = 50 + phoneLabelWidth + 5;
+                    const phoneBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: phoneBoxX,
+                        y: phoneBoxY,
+                        width: phoneValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(phoneValue, {
+                        x: phoneBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Phone
+
+                    // SSO
+                    const ssoLabel = "SSO: ";
+                    const ssoValue = formData.page1.ssoNeeded;
+
+                    // Draw the bold label
+                    firstPage.drawText(ssoLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const ssoLabelWidth = boldFont.widthOfTextAtSize(ssoLabel, fontSize);
+                    const ssoValueWidth = regularFont.widthOfTextAtSize(ssoValue, fontSize);
+                    const ssoBoxX = 50 + ssoLabelWidth + 5;
+                    const ssoBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: ssoBoxX,
+                        y: ssoBoxY,
+                        width: ssoValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(ssoValue, {
+                        x: ssoBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight * 2; // Add extra gap after SSO
+                    firstPage.drawText("UseCase Information", {
+                        x: 50,
+                        y: yPos,
+                        size: 15,
+                        color: textColor,
+                        font: boldFont
+                    });
+                    // yPos -= lineHeight;
+                    const textWidths = boldFont.widthOfTextAtSize("UseCase Information", headingFontSize);
+                    firstPage.drawLine({
+                        start: { x: 50, y: yPos - 2 }, // Adjust y position for the line
+                        end: { x: 50 + textWidths, y: yPos - 2 },
+                        thickness: 1, // Line thickness
+                        color: textColor,
+                    });
+                    yPos -= lineHeight + 10;
+
+
+                    const usecaseLabel = "Use Case: ";
+                    const usecaseValue = formData.page2.useCase;
+
+                    // Draw the bold label
+                    firstPage.drawText(usecaseLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const usecaseLabelWidth = boldFont.widthOfTextAtSize(usecaseLabel, fontSize);
+                    const usecaseValueWidth = regularFont.widthOfTextAtSize(usecaseValue, fontSize);
+                    const usecaseBoxX = 50 + usecaseLabelWidth + 5;
+                    const usecaseBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: usecaseBoxX,
+                        y: usecaseBoxY,
+                        width: usecaseValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(usecaseValue, {
+                        x: usecaseBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10;
+
+                    const coverageLabel = "Coverage: ";
+                    const coverageValue = formData.page2.coverage;
+
+                    // Draw the bold label
+                    firstPage.drawText(coverageLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const coverageLabelWidth = boldFont.widthOfTextAtSize(coverageLabel, fontSize);
+                    const coverageValueWidth = regularFont.widthOfTextAtSize(coverageValue, fontSize);
+                    const coverageBoxX = 50 + coverageLabelWidth + 5;
+                    const coverageBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: coverageBoxX,
+                        y: coverageBoxY,
+                        width: coverageValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(coverageValue, {
+                        x: coverageBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Coverage
+
+                    // Shipment Using
+                    const shipmentUsingLabel = "Shipment Using: ";
+                    const shipmentUsingValue = formData.page2.shipmentUsing;
+
+                    // Draw the bold label
+                    firstPage.drawText(shipmentUsingLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const shipmentUsingLabelWidth = boldFont.widthOfTextAtSize(shipmentUsingLabel, fontSize);
+                    const shipmentUsingValueWidth = regularFont.widthOfTextAtSize(shipmentUsingValue, fontSize);
+                    const shipmentUsingBoxX = 50 + shipmentUsingLabelWidth + 5;
+                    const shipmentUsingBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: shipmentUsingBoxX,
+                        y: shipmentUsingBoxY,
+                        width: shipmentUsingValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(shipmentUsingValue, {
+                        x: shipmentUsingBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Shipment Using
+
+                    // Reverse Pickup
+                    const reversePickupLabel = "Reverse Pickup: ";
+                    const reversePickupValue = formData.page2.reversePickup;
+
+                    // Draw the bold label
+                    firstPage.drawText(reversePickupLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const reversePickupLabelWidth = boldFont.widthOfTextAtSize(reversePickupLabel, fontSize);
+                    const reversePickupValueWidth = regularFont.widthOfTextAtSize(reversePickupValue, fontSize);
+                    const reversePickupBoxX = 50 + reversePickupLabelWidth + 5;
+                    const reversePickupBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: reversePickupBoxX,
+                        y: reversePickupBoxY,
+                        width: reversePickupValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(reversePickupValue, {
+                        x: reversePickupBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Reverse Pickup
+
+                    // Number of Lanes
+                    const numberOfLanesLabel = "Number of Lanes: ";
+                    const numberOfLanesValue = formData.page2.numberOfLanes;
+
+                    // Draw the bold label
+                    firstPage.drawText(numberOfLanesLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const numberOfLanesLabelWidth = boldFont.widthOfTextAtSize(numberOfLanesLabel, fontSize);
+                    const numberOfLanesValueWidth = regularFont.widthOfTextAtSize(numberOfLanesValue, fontSize);
+                    const numberOfLanesBoxX = 50 + numberOfLanesLabelWidth + 5;
+                    const numberOfLanesBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: numberOfLanesBoxX,
+                        y: numberOfLanesBoxY,
+                        width: numberOfLanesValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(numberOfLanesValue, {
+                        x: numberOfLanesBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Number of Lanes
+
+                    // Supported Battery Life
+                    const supportedBatteryLifeLabel = "Supported Battery Life: ";
+                    const supportedBatteryLifeValue = formData.page2.supportedBatteryLife;
+
+                    // Draw the bold label
+                    firstPage.drawText(supportedBatteryLifeLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const supportedBatteryLifeLabelWidth = boldFont.widthOfTextAtSize(supportedBatteryLifeLabel, fontSize);
+                    const supportedBatteryLifeValueWidth = regularFont.widthOfTextAtSize(supportedBatteryLifeValue, fontSize);
+                    const supportedBatteryLifeBoxX = 50 + supportedBatteryLifeLabelWidth + 5;
+                    const supportedBatteryLifeBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: supportedBatteryLifeBoxX,
+                        y: supportedBatteryLifeBoxY,
+                        width: supportedBatteryLifeValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(supportedBatteryLifeValue, {
+                        x: supportedBatteryLifeBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight * 2; // Add extra gap after Supported Battery Life
+                    // Device Configuration
+                    firstPage.drawText("Device Configuration", {
+                        x: 50,
+                        y: yPos,
+                        size: 15,
+                        color: textColor,
+                        font: boldFont
+                    });
+                    // yPos -= lineHeight;
+                    const textWidthss = boldFont.widthOfTextAtSize("Device Configuration", headingFontSize);
+                    firstPage.drawLine({
+                        start: { x: 50, y: yPos - 2 }, // Adjust y position for the line
+                        end: { x: 50 + textWidthss, y: yPos - 2 },
+                        thickness: 1, // Line thickness
+                        color: textColor,
+                    });
+                    yPos -= lineHeight+ 10;
+
+
+
+                    const deviceTypeLabel = "Device Type: ";
+                    const deviceTypeValue = formData.page3.deviceType;
+
+                    // Draw the bold label
+                    firstPage.drawText(deviceTypeLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const deviceTypeLabelWidth = boldFont.widthOfTextAtSize(deviceTypeLabel, fontSize);
+                    const deviceTypeValueWidth = regularFont.widthOfTextAtSize(deviceTypeValue, fontSize);
+                    const deviceTypeBoxX = 50 + deviceTypeLabelWidth + 5;
+                    const deviceTypeBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: deviceTypeBoxX,
+                        y: deviceTypeBoxY,
+                        width: deviceTypeValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(deviceTypeValue, {
+                        x: deviceTypeBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Device Type
+
+                    // Locations
+                    const locationsLabel = "Locations: ";
+                    const locationsValue = formData.page3.locations.join(", ");
+
+                    // Draw the bold label
+                    firstPage.drawText(locationsLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const locationsLabelWidth = boldFont.widthOfTextAtSize(locationsLabel, fontSize);
+                    const locationsValueWidth = regularFont.widthOfTextAtSize(locationsValue, fontSize);
+                    const locationsBoxX = 50 + locationsLabelWidth + 5;
+                    const locationsBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: locationsBoxX,
+                        y: locationsBoxY,
+                        width: locationsValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(locationsValue, {
+                        x: locationsBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Locations
+
+                    // Sensors
+                    const sensorsLabel = "Sensors: ";
+                    const sensorsValue = formData.page3.sensors.join(", ");
+
+                    // Draw the bold label
+                    firstPage.drawText(sensorsLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const sensorsLabelWidth = boldFont.widthOfTextAtSize(sensorsLabel, fontSize);
+                    const sensorsValueWidth = regularFont.widthOfTextAtSize(sensorsValue, fontSize);
+                    const sensorsBoxX = 50 + sensorsLabelWidth + 5;
+                    const sensorsBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: sensorsBoxX,
+                        y: sensorsBoxY,
+                        width: sensorsValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(sensorsValue, {
+                        x: sensorsBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Sensors
+
+                    // Interrupt
+                    const interruptLabel = "Interrupt: ";
+                    const interruptValue = formData.page3.interrupt.join(", ");
+
+                    // Draw the bold label
+                    firstPage.drawText(interruptLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const interruptLabelWidth = boldFont.widthOfTextAtSize(interruptLabel, fontSize);
+                    const interruptValueWidth = regularFont.widthOfTextAtSize(interruptValue, fontSize);
+                    const interruptBoxX = 50 + interruptLabelWidth + 5;
+                    const interruptBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: interruptBoxX,
+                        y: interruptBoxY,
+                        width: interruptValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(interruptValue, {
+                        x: interruptBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Interrupt
+
+                    // BLE
+                    const bleLabel = "BLE: ";
+                    const bleValue = formData.page3.ble;
+
+                    // Draw the bold label
+                    firstPage.drawText(bleLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const bleLabelWidth = boldFont.widthOfTextAtSize(bleLabel, fontSize);
+                    const bleValueWidth = regularFont.widthOfTextAtSize(bleValue, fontSize);
+                    const bleBoxX = 50 + bleLabelWidth + 5;
+                    const bleBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: bleBoxX,
+                        y: bleBoxY,
+                        width: bleValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(bleValue, {
+                        x: bleBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after BLE
+
+                    // Sample Mode
+                    const sampleModeLabel = "Sample Mode: ";
+                    const sampleModeValue = formData.page3.sampleMode;
+
+                    // Draw the bold label
+                    firstPage.drawText(sampleModeLabel, {
+                        x: 50,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: boldFont,
+                    });
+
+                    // Calculate the position for the light blue box
+                    const sampleModeLabelWidth = boldFont.widthOfTextAtSize(sampleModeLabel, fontSize);
+                    const sampleModeValueWidth = regularFont.widthOfTextAtSize(sampleModeValue, fontSize);
+                    const sampleModeBoxX = 50 + sampleModeLabelWidth + 5;
+                    const sampleModeBoxY = yPos - fontSize;
+
+                    // Draw the light blue box with reduced height
+                    firstPage.drawRectangle({
+                        x: sampleModeBoxX,
+                        y: sampleModeBoxY,
+                        width: sampleModeValueWidth + boxPadding * 2,
+                        height: fontSize + boxPadding * 2, // Reduced height
+                        color: boxColor,
+                        opacity: 0.5,
+                    });
+
+                    // Draw the dynamic content inside the box
+                    firstPage.drawText(sampleModeValue, {
+                        x: sampleModeBoxX + boxPadding,
+                        y: yPos,
+                        size: fontSize,
+                        color: textColor,
+                        font: regularFont,
+                    });
+
+                    yPos -= lineHeight + 10; // Add extra gap after Sample Mode
+
+                    // Conditional Sample Mode Fields
+                    if (formData.page3.sampleMode === "ON") {
+                        // Report Interval
+                        const reportIntervalLabel = "Report Interval: ";
+                        const reportIntervalValue = formData.page3.reportInterval;
+
+                        // Draw the bold label
+                        firstPage.drawText(reportIntervalLabel, {
+                            x: 50,
+                            y: yPos,
+                            size: fontSize,
+                            color: textColor,
+                            font: boldFont,
+                        });
+
+                        // Calculate the position for the light blue box
+                        const reportIntervalLabelWidth = boldFont.widthOfTextAtSize(reportIntervalLabel, fontSize);
+                        const reportIntervalValueWidth = regularFont.widthOfTextAtSize(reportIntervalValue, fontSize);
+                        const reportIntervalBoxX = 50 + reportIntervalLabelWidth + 5;
+                        const reportIntervalBoxY = yPos - fontSize;
+
+                        // Draw the light blue box with reduced height
+                        firstPage.drawRectangle({
+                            x: reportIntervalBoxX,
+                            y: reportIntervalBoxY,
+                            width: reportIntervalValueWidth + boxPadding * 2,
+                            height: fontSize + boxPadding * 2, // Reduced height
+                            color: boxColor,
+                            opacity: 0.5,
+                        });
+
+                        // Draw the dynamic content inside the box
+                        firstPage.drawText(reportIntervalValue, {
+                            x: reportIntervalBoxX + boxPadding,
+                            y: yPos,
+                            size: fontSize,
+                            color: textColor,
+                            font: regularFont,
+                        });
+
+                        yPos -= lineHeight + 10; // Add extra gap after Report Interval
+
+                        // Sample Interval
+                        const sampleIntervalLabel = "Sample Interval: ";
+                        const sampleIntervalValue = formData.page3.sampleInterval;
+
+                        // Draw the bold label
+                        firstPage.drawText(sampleIntervalLabel, {
+                            x: 50,
+                            y: yPos,
+                            size: fontSize,
+                            color: textColor,
+                            font: boldFont,
+                        });
+
+                        // Calculate the position for the light blue box
+                        const sampleIntervalLabelWidth = boldFont.widthOfTextAtSize(sampleIntervalLabel, fontSize);
+                        const sampleIntervalValueWidth = regularFont.widthOfTextAtSize(sampleIntervalValue, fontSize);
+                        const sampleIntervalBoxX = 50 + sampleIntervalLabelWidth + 5;
+                        const sampleIntervalBoxY = yPos - fontSize;
+
+                        // Draw the light blue box with reduced height
+                        firstPage.drawRectangle({
+                            x: sampleIntervalBoxX,
+                            y: sampleIntervalBoxY,
+                            width: sampleIntervalValueWidth + boxPadding * 2,
+                            height: fontSize + boxPadding * 2, // Reduced height
+                            color: boxColor,
+                            opacity: 0.5,
+                        });
+
+                        // Draw the dynamic content inside the box
+                        firstPage.drawText(sampleIntervalValue, {
+                            x: sampleIntervalBoxX + boxPadding,
+                            y: yPos,
+                            size: fontSize,
+                            color: textColor,
+                            font: regularFont,
+                        });
+
+                        yPos -= lineHeight + 10; // Add extra gap after Sample Interval
+                    } else {
+                        // PRF
+                        const prfLabel = "PRF: ";
+                        const prfValue = formData.page3.prf;
+
+                        // Draw the bold label
+                        firstPage.drawText(prfLabel, {
+                            x: 50,
+                            y: yPos,
+                            size: fontSize,
+                            color: textColor,
+                            font: boldFont,
+                        });
+
+                        // Calculate the position for the light blue box
+                        const prfLabelWidth = boldFont.widthOfTextAtSize(prfLabel, fontSize);
+                        const prfValueWidth = regularFont.widthOfTextAtSize(prfValue, fontSize);
+                        const prfBoxX = 50 + prfLabelWidth + 5;
+                        const prfBoxY = yPos - fontSize;
+
+                        // Draw the light blue box with reduced height
+                        firstPage.drawRectangle({
+                            x: prfBoxX,
+                            y: prfBoxY,
+                            width: prfValueWidth + boxPadding * 2,
+                            height: fontSize + boxPadding * 2, // Reduced height
+                            color: boxColor,
+                            opacity: 0.5,
+                        });
+
+                        // Draw the dynamic content inside the box
+                        firstPage.drawText(prfValue, {
+                            x: prfBoxX + boxPadding,
+                            y: yPos,
+                            size: fontSize,
+                            color: textColor,
+                            font: regularFont,
+                        });
+
+                        yPos -= lineHeight + 10; // Add extra gap after PRF
+                    }
+                   // Calculate the width of the box based on the longest command
+const maxCommandLength = Math.max(...commandsList.map(command => command.length));
+const boxWidth = maxCommandLength * fontSize * 0.6 + boxPadding * 2; // Adjust multiplier as needed
+
+// Calculate the height of the box based on the number of commands
+const boxHeight = commandsList.length * lineHeight + boxPadding ;
+
+// Draw the "Generated Commands" heading
+firstPage.drawText("Generated Commands", {
+    x: 50,
+    y: yPos,
+    size: fontSize,
+    color: textColor,
+    font: boldFont,
+});
+const textWidthx = "Generated Commands".length * fontSize * 0.6; // Adjust multiplier as needed
+
+// Draw a line under the text
+firstPage.drawLine({
+    start: { x: 50, y: yPos - 5 }, // Adjust y position for the line
+    end: { x: 50 + textWidthx, y: yPos - 5 },
+    thickness: 1, // Line thickness
+    color: textColor,
+});
+
+// Adjust yPos for the gap after the heading
+yPos -= lineHeight + 8;
+
+// Draw the rectangle (box) around the commands
+firstPage.drawRectangle({
+    x: 50 - boxPadding, // Align with the text
+    y: yPos - boxHeight + lineHeight + boxPadding, // Adjust y position to fit the box around the commands
+    width: boxWidth,
+    height: boxHeight,
+    color: boxColor,
+    opacity: 0.5,
+});
+
+// Draw each command inside the box
+commandsList.forEach(command => {
+    firstPage.drawText(command, {
+        x: 50,
+        y: yPos,
+        size: fontSize,
+        color: textColor,
+    });
+    yPos -= lineHeight;
+});
+
+// Adjust yPos for the next section
+yPos -= boxPadding;
+
+                    // Save the modified PDF
+                    const modifiedPdfBytes = await pdfDoc.save();
+                    const blob = new Blob([modifiedPdfBytes], { type: "application/pdf" });
+                    saveAs(blob, "rename_modified.pdf");
+
+                    console.log("PDF modified successfully!");
+                    window.location.href = "page4.html";
+                } catch (error) {
+                    console.error("Error modifying PDF:", error);
+                    alert("Error modifying PDF: " + error.message);
+                }
+            } else {
+                alert("Please fill out all required fields correctly.");
+            }
+            localStorage.removeItem('page1Data')
+            localStorage.removeItem('page2Data')
+        }
+    </script>
+
+</body>
+
+</html>
